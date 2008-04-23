@@ -1,6 +1,6 @@
 package Language::Homespring::Visualise::GraphViz;
 
-$VERSION = 0.01;
+$VERSION = 0.02;
 
 use warnings;
 use strict;
