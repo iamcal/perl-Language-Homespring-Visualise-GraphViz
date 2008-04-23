@@ -15,5 +15,11 @@ close(F);
 my $hs = new Language::Homespring();
 $hs->parse($code);
 
-my $vs = new Language::Homespring::Visualise::GraphViz({'interp' => $hs});
+my $vs = new Language::Homespring::Visualise::GraphViz({
+		'interp' => $hs,
+		'spring_col' => '#ffcccc',
+		'node_col' => '#ccffcc',
+		'fontname' => 'Arial',
+		'fontsize' => 10,
+	});
 print $vs->do()->as_gif;

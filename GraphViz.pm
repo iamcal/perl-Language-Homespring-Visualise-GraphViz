@@ -1,6 +1,6 @@
 package Language::Homespring::Visualise::GraphViz;
 
-$VERSION = 0.02;
+$VERSION = 0.03;
 
 use warnings;
 use strict;
@@ -11,7 +11,12 @@ sub new {
         my $self = bless {}, $class;
 
         my $options = shift;
-        $self->{interp}	= $options->{interp};
+        $self->{interp}		= $options->{interp};
+	$self->{spring_col}	= $options->{spring_col} || '#C0C0FF';
+	$self->{node_col}	= $options->{node_col} || 'white';
+
+	$self->{fontname}	= $options->{fontname} || 'Times';
+	$self->{fontsize}	= $options->{fontsize} || '12';
 
         return $self;
 }
@@ -38,14 +43,16 @@ sub add_node {
 		my $label = $_->{node_name_safe};
 		$label =~ s/\\/\\\\/g;
 
-		my $fillcolor = $_->{spring}?'#C0C0FF':'white';
+		my $fillcolor = $_->{spring}?$self->{spring_col}:$self->{node_col};
 
 		$self->{graph}->add_node(
 			$_->{uid}, 
-			label => $label,
-			rank => $rank,
-			fillcolor => $fillcolor,
-			style => 'filled',
+			label		=> $label,
+			rank		=> $rank,
+			fillcolor	=> $fillcolor,
+			style		=> 'filled',
+			fontname	=> $self->{fontname},
+			fontsize	=> $self->{fontsize},
 		);
 
 		$self->{graph}->add_edge(
@@ -86,20 +93,54 @@ your code produces :)
 
 =over 4
 
-=item new({'interp' => $hs})
+=item C<new({'interp' => $hs})>
 
-Creates a new Language::Homespring::Visualise::GraphViz object. The single
+Creates a new C<Language::Homespring::Visualise::GraphViz> object. The single
 hash argument contains initialisation info. The only key currently
-supported (and required!) is 'interp', which should point to the
-Language::Homespring object you wish to visualise.
+required is 'interp', which should point to the C<Language::Homespring> object 
+you wish to visualise. 
 
-=item do()
+Other optional keys are:
 
-Returns a GraphViz object, with all nodes and edges for the current state
+=over 5
+
+=item C<node_col>
+
+The background color to use for reserved word nodes. Specified in GraphViz 
+format (#rrggbb is ok). Defaults to white.
+
+=item C<spring_col>
+
+The background color to use for spring nodes. Specified in GraphViz format 
+(#rrggbb is ok). Defaults to #c0c0ff (light blue).
+
+=item C<fontname>
+
+The name of the font to use. Defaults to "Times".
+
+B<Important:> If the font file cannot be found (for "Times", "Times.ttf" must 
+be in the font seach path - remember case sensitivity on unix etc.) then a 
+built in font will be used, BUT the labels will not be centered in the nodes.
+
+=item C<fontsize>
+
+The size of the font in points. Defaults to 12.
+
+=back
+
+=item C<do()>
+
+Returns a C<GraphViz> object, with all nodes and edges for the current state
 of the op-tree. You can then call standard GraphViz methods on this object
 such as as_gif() and as_png() to output an image.
 
 =back
+
+=head1 EXAMPLES
+
+The examples folder in this distribution contains an example script (C<example.pl>)
+and three example GIFs. The GIFs are visual representations of the .hs files of the 
+same name from the C<Language::Homespring> distribution.
 
 =head1 AUTHOR
 
