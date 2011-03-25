@@ -93,7 +93,7 @@ your code produces :)
 
 =over 4
 
-=item C<new({'interp' => $hs})>
+=item C<< new({'interp' => $hs}) >>
 
 Creates a new C<Language::Homespring::Visualise::GraphViz> object. The single
 hash argument contains initialisation info. The only key currently
